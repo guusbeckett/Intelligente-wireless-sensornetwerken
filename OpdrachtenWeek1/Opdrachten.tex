@@ -1,0 +1,453 @@
+\documentclass[12pt]{article}
+
+\pagestyle{empty}
+\setcounter{secnumdepth}{2}
+%----------------------------------------------------------------------------------------
+%   Packages and configurations
+%----------------------------------------------------------------------------------------
+\usepackage[dutch]{babel}
+\usepackage{hyperref} %Allow for references
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+} %Set up hyperlink colours.
+\newcommand{\sectionbreak}{\clearpage} % Should start every section on its own page
+\usepackage{geometry} % Required to change the page size to A4
+\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+\usepackage{chngpage}
+\usepackage{appendix}
+%REMOVE IF HEADER/FOOTER BROKEN
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{extramarks} % Required for headers and footers
+\usepackage{lastpage} % Required to determine the last page for the footer
+%-----------------1
+\topmargin=0cm
+\oddsidemargin=0cm
+\textheight=22.0cm
+\textwidth=16cm
+\parindent=0cm
+\parskip=0.15cm
+\topskip=0truecm
+\raggedbottom
+\abovedisplayskip=3mm
+\belowdisplayskip=3mm
+\abovedisplayshortskip=0mm
+\belowdisplayshortskip=2mm
+\normalbaselineskip=12pt
+\normalbaselines
+\usepackage{listings}
+\usepackage[svgnames,table,xcdraw]{xcolor}
+\lstset { 
+    language=C,
+    frame=single,
+    escapeinside={\%*}{*)}, 
+    breaklines=true,  
+    backgroundcolor=\color{black!5},
+    basicstyle=\footnotesize,
+    commentstyle=\color{mygreen},
+    numberstyle=\tiny\color{mygray},
+    rulecolor=\color{black},
+    keywordstyle=\color{blue},
+}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\usepackage{wasysym}
+\pagestyle{fancy}
+\lhead{Guus \textsc{Beckett}, Jim \textsc{van Abkoude} \& Julian \textsc{West}} % Top left header
+\rhead{Opdrachten week 1} % Top center header
+\lfoot{\includegraphics[height=1cm]{avans}} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Pagina\ \thepage} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+\usepackage{graphicx} % Required for including pictures
+
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{pdfpages}
+\usepackage[font={footnotesize}]{caption}
+\graphicspath{ {../Images/Logos/}{../Images/} }
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+%\usepackage{showframe}
+\newcommand*{\SignatureAndDate}[1]{%
+    \par\noindent\makebox[2.5in]{\hrulefill} \hfill\makebox[2.0in]{\hrulefill}%
+    \par\noindent\makebox[2.5in][l]{#1}      \hfill\makebox[2.0in][l]{Date}%
+}%Signature package
+\begin{document}
+\begin{titlepage}
+\pagenumbering{Roman}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+\includegraphics[height=3cm] {avans}\\% Include a department/university logo - this will require the graphicx package
+\textsc{\Large Avans Hogeschool Breda}\\[0.5cm] % Major heading such as course name
+\textsc{\large Intelligente wireless sensornetwerken }\\[0.5cm] % Minor heading such as course title
+\HRule \\[0.4cm]
+{ \huge \bfseries Opdrachten week 1}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Auteurs:}\\
+Guus \textsc{Beckett} \\% Your name 
+Jim \textsc{van Abkoude} \\
+Julian \textsc{West}
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Docenten:} \\
+Diederich \textsc{Kroeske} \\ % Supervisor's Name
+Andries \textsc{van Dongen} \\ % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+Versie: 0.1.0
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\clearpage
+% \section*{Voorwoord}
+% \addcontentsline{toc}{section}{Voorwoord}
+
+% Guus Beckett \& Jim van Abkoude \\
+% \today \\
+% Breda
+% \newpage
+% \section*{Samenvatting}
+% \addcontentsline{toc}{section}{Samenvatting}
+% \lipsum[0-2]
+% \newpage
+% \tableofcontents
+% \newpage
+\pagenumbering{arabic}
+\section*{Opdracht 1}
+\begin{quote}
+Bij het loggen van data is een correcte time-stamp van belang. In bijlage 1 is een voorbeeld sketch gegeven waarbij de Arduino een nauwkeurige time-stamp van een NTP server ophaalt. Klopt de code met het NTP protocol? Bewerk de code zodat deze connect naar een tijdserver in NL (nl.pool.ntp.org), inclusief DNS query.
+\end{quote}
+\begin{lstlisting}
+/*
+Udp NTP Client
+Get the time from a Network Time Protocol (NTP) time server
+Demonstrates use of UDP sendPacket and ReceivePacket
+For more on NTP time servers and the messages needed to communicate with them,
+see http://en.wikipedia.org/wiki/Network_Time_Protocol
+
+created 4 Sep 2010
+by Michael Margolis
+
+modified 17 Sep 2010
+by Tom Igoe
+
+modified 4 feb 2015
+by Guus Beckett, Jim van Abkoude & Julian West
+This code is in the public domain.
+*/
+#include <SPI.h>
+#include <Ethernet.h>
+#include <EthernetUdp.h>
+#include <Dns.h>
+// Enter a MAC address for your controller below.
+// Newer Ethernet shields have a MAC address printed on a sticker on the shield
+byte mac[] =
+{
+    0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
+};
+unsigned int localPort = 8888; // local port to listen for UDP packets
+IPAddress timeServer(192, 43, 244, 18); // time.nist.gov NTP server
+const int NTP_PACKET_SIZE = 48; // NTP time stamp is in the first 48 bytes of the message
+byte packetBuffer[ NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
+// A UDP instance to let us send and receive packets over UDP
+EthernetUDP Udp;
+void setup()
+{
+    Serial.begin(9600);
+    Serial.println("Starting up");
+    // start Ethernet and UDP
+    if (Ethernet.begin(mac) == 0)
+    {
+        Serial.println("Failed to configure Ethernet using DHCP");
+        // no point in carrying on, so do nothing forevermore:
+        for (;;);
+    }
+    else
+    {
+      
+        Serial.print("Local IP: ");
+        Serial.println(Ethernet.localIP());
+        Serial.print("Subnet Mask: ");
+        Serial.println(Ethernet.subnetMask());
+        Serial.print("Gateway: ");
+        Serial.println(Ethernet.gatewayIP());
+        Serial.print("Primary DNS: ");
+        Serial.println(Ethernet.dnsServerIP());
+    }
+    DNSClient client;
+    client.begin(Ethernet.dnsServerIP());
+    if (client.getHostByName("nl.pool.ntp.org", timeServer) == 1)
+    {
+      Serial.print("resolved ntpserver to ");
+      Serial.print(timeServer);
+    }
+    else
+    {
+      Serial.println("Unable to resolve IP");
+    }
+    Udp.begin(localPort);
+    
+}
+void loop()
+{
+    sendNTPpacket(timeServer); // send an NTP packet to a time server
+    // wait to see if a reply is available
+    delay(1000);
+    if ( Udp.parsePacket() )
+    {
+        // We've received a packet, read the data from it
+        Udp.read(packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
+        //the timestamp starts at byte 40 of the received packet and is four bytes,
+        // or two words, long. First, esxtract the two words:
+        unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
+        unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
+        // combine the four bytes (two words) into a long integer
+        // this is NTP time (seconds since Jan 1 1900):
+        unsigned long secsSince1900 = highWord << 16 | lowWord;
+        Serial.print("Seconds since Jan 1 1900 = ");
+        Serial.println(secsSince1900);
+
+        // now convert NTP time into everyday time:
+        Serial.print("Unix time = ");
+        // Unix time starts on Jan 1 1970. In seconds, that's 2208988800:
+        const unsigned long seventyYears = 2208988800UL;
+        // subtract seventy years:
+        unsigned long epoch = secsSince1900 - seventyYears;
+        // print Unix time:
+        Serial.println(epoch);
+        // print the hour, minute and second:
+        Serial.print("The UTC time is "); // UTC is the time at Greenwich Meridian (GMT)
+        Serial.print((epoch % 86400L) / 3600); // print the hour (86400 equals secs per day)
+        Serial.print(':');
+        if ( ((epoch % 3600) / 60) < 10 )
+        {
+            // In the first 10 minutes of each hour, we'll want a leading '0'
+            Serial.print('0');
+        }
+        Serial.print((epoch % 3600) / 60); // print the minute (3600 equals secs per minute)
+        Serial.print(':');
+        if ( (epoch % 60) < 10 )
+        {
+            // In the first 10 seconds of each minute, we'll want a leading '0'
+            Serial.print('0');
+        }
+        Serial.println(epoch % 60); // print the second
+    }
+    else {
+      Serial.println("Failed to read UDP");
+    }
+    // wait ten seconds before asking for the time again
+    delay(10000);
+}
+// send an NTP request to the time server at the given address
+unsigned long sendNTPpacket(IPAddress &address)
+{
+    // set all bytes in the buffer to 0
+    memset(packetBuffer, 0, NTP_PACKET_SIZE);
+    // Initialize values needed to form NTP request
+    // (see URL above for details on the packets)
+    packetBuffer[0] = 0b11100011; // LI, Version, Mode
+    packetBuffer[1] = 0; // Stratum, or type of clock
+    packetBuffer[2] = 6; // Polling Interval
+    packetBuffer[3] = 0xEC; // Peer Clock Precision
+    // 8 bytes of zero for Root Delay & Root Dispersion
+    packetBuffer[12] = 49;
+    packetBuffer[13] = 0x4E;
+    packetBuffer[14] = 49;
+    packetBuffer[15] = 52;
+    // all NTP fields have been given values, now
+    // you can send a packet requesting a timestamp:
+    Udp.beginPacket(address, 123); //NTP requests are to port 123
+    Udp.write(packetBuffer, NTP_PACKET_SIZE);
+    Udp.endPacket();
+}
+\end{lstlisting}
+\section*{Opdracht 5}
+\begin{quote}
+Onderzoek met Postman en de HUE Api hoe je met het Philips HUE systeem moet communiceren. Gebruik de CLIP API Debugger (zie HUE API ‘Getting Started’) om met een lamp te communiceren. Kun je de lamp aan/uit zetten? Of dimmen?
+\end{quote}
+Zodra we de verbonden zijn met de bridge en een GET request sturen naar \\\textit{192.168.1.2/api/newdeveloper/lights} krijgen we de volgende output
+\begin{lstlisting}
+{
+    "1": {
+        "state": {
+            "on": true,
+            "bri": 10,
+            "hue": 46260,
+            "sat": 254,
+            "xy": [
+                0.1765,
+                0.0588
+            ],
+            "ct": 500,
+            "alert": "none",
+            "effect": "none",
+            "colormode": "hs",
+            "reachable": true
+        },
+        "type": "Extended color light",
+        "name": "Links achter",
+        "modelid": "LCT001",
+        "uniqueid": "00:17:88:01:00:bf:8d:dd-0b",
+        "swversion": "66009663",
+        "pointsymbol": {
+            "1": "none",
+            "2": "none",
+            "3": "none",
+            "4": "none",
+            "5": "none",
+            "6": "none",
+            "7": "none",
+            "8": "none"
+        }
+    },
+    "2": {
+        "state": {
+            "on": true,
+            "bri": 143,
+            "hue": 4626,
+            "sat": 254,
+            "xy": [
+                0.6269,
+                0.3574
+            ],
+            "ct": 500,
+            "alert": "none",
+            "effect": "none",
+            "colormode": "hs",
+            "reachable": true
+        },
+        "type": "Extended color light",
+        "name": "Rechts achter",
+        "modelid": "LCT001",
+        "uniqueid": "00:17:88:01:00:bf:7f:36-0b",
+        "swversion": "66009663",
+        "pointsymbol": {
+            "1": "none",
+            "2": "none",
+            "3": "none",
+            "4": "none",
+            "5": "none",
+            "6": "none",
+            "7": "none",
+            "8": "none"
+        }
+    },
+    "3": {
+        "state": {
+            "on": true,
+            "bri": 10,
+            "hue": 46260,
+            "sat": 254,
+            "xy": [
+                0.1765,
+                0.0588
+            ],
+            "ct": 500,
+            "alert": "none",
+            "effect": "none",
+            "colormode": "hs",
+            "reachable": true
+        },
+        "type": "Extended color light",
+        "name": "Links voor",
+        "modelid": "LCT001",
+        "uniqueid": "00:17:88:01:00:bf:90:49-0b",
+        "swversion": "66009663",
+        "pointsymbol": {
+            "1": "none",
+            "2": "none",
+            "3": "none",
+            "4": "none",
+            "5": "none",
+            "6": "none",
+            "7": "none",
+            "8": "none"
+        }
+    },
+    "4": {
+        "state": {
+            "on": true,
+            "bri": 254,
+            "hue": 60050,
+            "sat": 254,
+            "xy": [
+                0.5928,
+                0.25
+            ],
+            "alert": "none",
+            "effect": "none",
+            "colormode": "hs",
+            "reachable": true
+        },
+        "type": "Color light",
+        "name": "Bloom rechts voor",
+        "modelid": "LLC012",
+        "uniqueid": "00:17:88:01:00:c3:61:90-0b",
+        "swversion": "66009461",
+        "pointsymbol": {
+            "1": "none",
+            "2": "none",
+            "3": "none",
+            "4": "none",
+            "5": "none",
+            "6": "none",
+            "7": "none",
+            "8": "none"
+        }
+    },
+    "5": {
+        "state": {
+            "on": true,
+            "bri": 50,
+            "hue": 4626,
+            "sat": 254,
+            "xy": [
+                0.703,
+                0.296
+            ],
+            "alert": "none",
+            "effect": "none",
+            "colormode": "hs",
+            "reachable": false
+        },
+        "type": "Color light",
+        "name": "Bloom links achter",
+        "modelid": "LLC012",
+        "uniqueid": "00:17:88:01:00:c3:61:ba-0b",
+        "swversion": "66009461",
+        "pointsymbol": {
+            "1": "none",
+            "2": "none",
+            "3": "none",
+            "4": "none",
+            "5": "none",
+            "6": "none",
+            "7": "none",
+            "8": "none"
+        }
+    }
+}
+\end{lstlisting}
+
+\clearpage 
+\end{document}
