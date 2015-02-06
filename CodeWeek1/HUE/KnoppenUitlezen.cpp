@@ -124,8 +124,9 @@ void loop()
     {
       /* code */
         hue(onOffSwitch);
+        delay(1000);
     }
-    delay(1000);
+    delay(10);
 }
 
 
