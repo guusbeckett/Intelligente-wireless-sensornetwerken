@@ -57,8 +57,8 @@
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \usepackage{wasysym}
 \pagestyle{fancy}
-\lhead{\textsc{Beckett}, \textsc{van Abkoude}, \textsc{West} \& \textsc{Mathijssen}} % Top left header
-\rhead{Opdrachten week 2} % Top center header
+\lhead{\textsc{Beckett} \& \textsc{Mathijssen}} % Top left header
+\rhead{Opdrachten week 3} % Top center header
 \lfoot{\includegraphics[height=0.8cm]{avans}} % Bottom left footer
 \cfoot{} % Bottom center footer
 \rfoot{Pagina\ \thepage} % Bottom right footer
@@ -89,15 +89,13 @@
 \textsc{\Large Avans Hogeschool Breda}\\[0.5cm] % Major heading such as course name
 \textsc{\large Intelligente wireless sensornetwerken }\\[0.5cm] % Minor heading such as course title
 \HRule \\[0.4cm]
-{ \huge \bfseries Opdrachten week 2}\\[0.4cm] % Title of your document
+{ \huge \bfseries Opdrachten week 3	}\\[0.4cm] % Title of your document
 \HRule \\[1.5cm]
 
 \begin{minipage}{0.4\textwidth}
 \begin{flushleft} \large
 \emph{Auteurs:}\\
 Guus \textsc{Beckett} \\% Your name 
-Jim \textsc{van Abkoude} \\
-Julian \textsc{West} \\
 Joris \textsc{Mathijssen}
 \end{flushleft}
 \end{minipage}
@@ -133,39 +131,23 @@ Versie: 0.2.0
 % \tableofcontents
 % \newpage
 \pagenumbering{arabic}
-\section*{Opdracht 1}
+\section*{Opdracht 1 a}
 \begin{quote}
-Installeer node.js en mysql op een Linux machine. Dit mag een virtuele machine zijn (handig bij het
-ontwikkelen) of een Raspberry PI. In het mini project is het de bedoeling een Raspberry Pi te gebruiken. Verifieer de correct werking, bijvoorbeeld door het runnen van eenvoudig test scripts zoals te vinden op nodejs.org
+Doorloop hoofdstuk 2 vanaf bladzijde 40 en voer de opdrachten uit. In dit hoofdstuk gaat het om de kennismaking met AT-commando’s en het realiseren van een point-to-point(P2P) verbinding tussen twee XBee-nodes(Series2)en de kennismaking met AT-commando’s.Een node is de coordinator en de andere een router.
 \end{quote}
-We zijn begonnen met het controleren of mysql en nodejs geinstaleerd zijn. Dit deden we door de volgende commands uit te voeren
+We hebben de opdrachten van hoofdstuk 2 uitgevoerd. Via de volgende commandos hebben we een chat opgezet tussen 2 Xbees
 \begin{lstlisting}
-$ mysql --version
-The program 'mysql' can not be found
++++ OK
 
-$ node --version
-The program 'node' can not be found
-\end{lstlisting}
-Beide zijn nog niet geinstaleerd. Dus we moeten dit nog doen op de server. We voeren eerst de commands voor node js uit.
-\begin{lstlisting}
-$  yum install nodejs
-\end{lstlisting}
-NodeJS is geinstaleerd na een kleine minuut
-\\
-We gaan nu mysql op de zelfde manier uit voeren
-\begin{lstlisting}
-$  yum install mysql
-\end{lstlisting}
-Na een aantal minuten is deze ook voltooid. We controleren nu op de zelfde manier de versie.
-\begin{lstlisting}
-$ mysql --version
-mysql  Ver 14.14 Distrib 5.1.73, for redhat-linux-gnu (x86_64) using readline 5.1
+atid 2016
 
-$ node --version
-v0.10.33
+atwr
+
+atcn
 \end{lstlisting}
+Hier na was het mogelijk om te communiceren via de terminal met de andere Xbee
 \newpage
-\section*{Opdracht 2}
+\section*{Opdracht 1b}
 \begin{quote}
 Ontwerp een eenvoudige database. Voor het miniproject gebruiken we de volgende userstory:In een meetopstelling worden meetwaarden met bijbehorende time-stamp gegenereerd (1-N relatie). Bij de meetopstelling kan een locatie (long/lat) en een beschrijving worden gespecificeerd. Een meetopstelling mag alleen ‘ge-query-d’ worden door geautoriseerde gebruikers.Implementeer de database (let op foreign keys!) en vul de database met enkele waarden
 \end{quote}
