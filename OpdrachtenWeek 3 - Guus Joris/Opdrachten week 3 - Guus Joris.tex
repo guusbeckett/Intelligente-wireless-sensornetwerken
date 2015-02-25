@@ -149,20 +149,25 @@ Hier na was het mogelijk om te communiceren via de terminal met de andere Xbee
 \newpage
 \section*{Opdracht 1b}
 \begin{quote}
-Ontwerp een eenvoudige database. Voor het miniproject gebruiken we de volgende userstory:In een meetopstelling worden meetwaarden met bijbehorende time-stamp gegenereerd (1-N relatie). Bij de meetopstelling kan een locatie (long/lat) en een beschrijving worden gespecificeerd. Een meetopstelling mag alleen ‘ge-query-d’ worden door geautoriseerde gebruikers.Implementeer de database (let op foreign keys!) en vul de database met enkele waarden
+1a heb je de 64-bits adressen gebruikt van elk van de nodes (source en destination).In een Zigbee netwerk wordt voor de controller ook het (destination)adres 0 gebruikt.
+De controller kan aan alle andere nodes bericht sturen door een broadcast met (destination) adres 0xFFFF. Pas dit toe bij drie nodes:een controller en twee routers: Open drie X-CTU applicaties met elk een node: 1 controller en 2 routers. Stel op de routers voor ‘destinationadress’ het adres met waarde 0 in.Controleer dat de communcatie werkt.
 \end{quote}
-We hebben eerst met zijn alle de database bedacht op papier. Dit hebben we gedaan omdat we dan het idee beter in ons hoofd zouden hebben.
+We hebben eerst de verschillende routers en coordinator geprogrameerd. Guus de 2 routers op zijn mac en ik de coordinator op mijn linux. Op de onderstaande manier hebben we het id veranderd en het address aangepast naar 0. Hierna konden de routers met de coordinator spreken en de coordinator met alle routers.
+\begin{lstlisting}
++++ OK
+
+atid 4816
+
+atdl 0
+
+atwr
+
+atcn
+\end{lstlisting}	
 \begin{figure}[h!]
   \centering
       \includegraphics[width=0.8\textwidth]{IMAG0013}
   \caption{Simpele schets van ons database idee}
-\end{figure}
-\\
-Hierna hebben we de database gerealiseerd in phpmyadmin.
-\begin{figure}[h!]
-  \centering
-      \includegraphics[width=0.8\textwidth]{Selection_003}
-  \caption{Database in Phpmyadmin}
 \end{figure}
 \newpage
 \end{document}
