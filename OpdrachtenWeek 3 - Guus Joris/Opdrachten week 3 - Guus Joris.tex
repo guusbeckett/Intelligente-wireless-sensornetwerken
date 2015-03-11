@@ -57,7 +57,7 @@
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \usepackage{wasysym}
 \pagestyle{fancy}
-\lhead{\textsc{Beckett} \& \textsc{Mathijssen}} % Top left header
+\lhead{\textsc{Beckett,} \textsc{Braat} \& \textsc{Mathijssen}} % Top left header
 \rhead{Opdrachten week 3} % Top center header
 \lfoot{\includegraphics[height=0.8cm]{avans}} % Bottom left footer
 \cfoot{} % Bottom center footer
@@ -71,7 +71,7 @@
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
 \usepackage{pdfpages}
 \usepackage[font={footnotesize}]{caption}
-\graphicspath{ {../Images/Logos/}{../Images/}{../Images/Week1/} {../Images/Week2/}}
+\graphicspath{ {../Images/Logos/}{../Images/}{../Images/Week1/} {../Images/Week2/}{../Images/Week3/}}
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
 %\usepackage{showframe}
 \newcommand*{\SignatureAndDate}[1]{%
@@ -96,7 +96,8 @@
 \begin{flushleft} \large
 \emph{Auteurs:}\\
 Guus \textsc{Beckett} \\% Your name 
-Joris \textsc{Mathijssen}
+Joris \textsc{Mathijssen}\\
+Jelle \textsc{Braat} % Your name 
 \end{flushleft}
 \end{minipage}
 ~
@@ -147,7 +148,7 @@ atcn
 \end{lstlisting}
 Hier na was het mogelijk om te communiceren via de terminal met de andere Xbee
 \newpage
-\section*{Opdracht 1b}
+\section*{Opdracht 1 b}
 \begin{quote}
 1a heb je de 64-bits adressen gebruikt van elk van de nodes (source en destination).In een Zigbee netwerk wordt voor de controller ook het (destination)adres 0 gebruikt.
 De controller kan aan alle andere nodes bericht sturen door een broadcast met (destination) adres 0xFFFF. Pas dit toe bij drie nodes:een controller en twee routers: Open drie X-CTU applicaties met elk een node: 1 controller en 2 routers. Stel op de routers voor ‘destinationadress’ het adres met waarde 0 in.Controleer dat de communcatie werkt.
@@ -164,10 +165,176 @@ atwr
 
 atcn
 \end{lstlisting}	
-\begin{figure}[h!]
-  \centering
-      \includegraphics[width=0.8\textwidth]{IMAG0013}
-  \caption{Simpele schets van ons database idee}
-\end{figure}
 \newpage
+\section*{Opdracht 1 c}
+\begin{quote}
+Als alles van onderdeel b werkt: Sluit de twee remote roudre-nodes aan op een Arduino-bordje met een XBee-shield. Laat in elk van de Arduino’s een programma draaien dat periodiek een karakter verstuurt: Bijvoorbeeld elke seconde een karakter ‘a’ door remote node 1 en elke halve seconde een ‘b’ door remote node 2. Een voorbeeldprogramma tref je aan in de bijlage 1. Alles komt dan samen op de controller. Bekijk alles via een terminalprogramma of via ‘ZigBeeOperator’. -Controleer de tijdsintervallen. -Sluit de remote Arduino-Xbee-nodes aan op een aparte voedingsspanning en leg ze elders in het lokaal neer. Ga eens na toe hoever het bereik van de nodes is.
+\end{quote}
+\newpage
+\section*{Opdracht 2 a}
+\begin{quote}
+Als alles van onderdeel b werkt: Sluit de twee remote roudre-nodes aan op een Arduino-bordje met een XBee-shield. Laat in elk van de Arduino’s een programma draaien dat periodiek een karakter verstuurt: Bijvoorbeeld elke seconde een karakter ‘a’ door remote node 1 en elke halve seconde een ‘b’ door remote node 2. Een voorbeeldprogramma tref je aan in de bijlage 1. Alles komt dan samen op de controller. Bekijk alles via een terminalprogramma of via ‘ZigBeeOperator’. -Controleer de tijdsintervallen. -Sluit de remote Arduino-Xbee-nodes aan op een aparte voedingsspanning en leg ze elders in het lokaal neer. Ga eens na toe hoever het bereik van de nodes is.
+\end{quote}
+Hier onder is de code van het printen van de 100 en 200.
+\begin{lstlisting}
+char* printerString = "malloc";
+int number = 100;
+  
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Programme started");
+}
+void loop() {
+  sprintf(printerString, "%d", number);
+  Serial.write(printerString);
+  Serial.write('  ');
+  delay(1000);
+}
+\end{lstlisting}
+Dit geeft de volgende output
+\\
+\includegraphics[scale=1] {foto1}
+\newpage
+\section*{Opdracht 2 b}
+\begin{quote}
+Als alles van onderdeel b werkt: Sluit de twee remote roudre-nodes aan op een Arduino-bordje met een XBee-shield. Laat in elk van de Arduino’s een programma draaien dat periodiek een karakter verstuurt: Bijvoorbeeld elke seconde een karakter ‘a’ door remote node 1 en elke halve seconde een ‘b’ door remote node 2. Een voorbeeldprogramma tref je aan in de bijlage 1. Alles komt dan samen op de controller. Bekijk alles via een terminalprogramma of via ‘ZigBeeOperator’. -Controleer de tijdsintervallen. -Sluit de remote Arduino-Xbee-nodes aan op een aparte voedingsspanning en leg ze elders in het lokaal neer. Ga eens na toe hoever het bereik van de nodes is.
+\end{quote}
+Wij hebben eerst de temperatuur sensor opgezet met de volgende code:
+\begin{lstlisting}
+int readingPin = A5;
+int sensorValue = 0;
+void setup() {
+  Serial.begin(9600);
+}
+void loop() {
+  sensorValue = analogRead(readingPin);
+//To celcius 
+ sensorValue *= 0.48828125;
+  Serial.print(sensorValue);
+  delay(10000);
+}
+\end{lstlisting}
+\includegraphics[scale=1] {foto2}\\
+Hierna zijn we door gegaan met de coden van het writen naar de server
+\\
+\newpage
+\begin{lstlisting}
+#include <Ethernet.h>
+#include <EthernetUdp.h>
+#include <Dns.h>
+#include <time.h>
+#include <SPI.h>
+
+int incomingByte = 0;
+char buffer[20];
+const int dezeMeetopstelling = 1;
+//178.62.191.231
+IPAddress restServer(178, 62, 191, 231); //Backup
+String restServerString = "178.62.191.231";
+String restServerPort   = "8080";
+byte mac[] =
+{
+	0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
+};
+
+
+void setup() {
+	Serial.begin(9600);
+	Serial.println("Programme started");
+	if (Ethernet.begin(mac) == 0)
+	{
+		Serial.println("Failed to configure Ethernet using DHCP");
+        // no point in carrying on, so do nothing forevermore:
+        for (;;);
+    }
+    else
+    {
+    	Serial.print("Eth info \n Local IP: ");
+    	Serial.println(Ethernet.localIP());
+    	Serial.print("Subnet Mask: ");
+    	Serial.println(Ethernet.subnetMask());
+    	Serial.print("Gateway: ");
+    	Serial.println(Ethernet.gatewayIP());
+    	Serial.print("Primary DNS: ");
+    	Serial.println(Ethernet.dnsServerIP());
+    }
+    DNSClient client;
+    client.begin(Ethernet.dnsServerIP());
+    if (client.getHostByName("zaku2.com", restServer) == 1)
+    {
+    	Serial.print("resolved server to ");
+    	Serial.print(restServer);
+    }
+    else
+    {
+    	Serial.print("Unable to resolve IP, using default: ");
+    	Serial.println(restServer);
+    }
+}
+
+void send_pack(int number)
+{
+	Serial.println("send_pack");
+	int contentLength;
+
+	EthernetClient client;
+
+	String jsonBody = String("{ \"meetopstellingen\": \""+String(dezeMeetopstelling)+"\","
+	//+"\"timestamp\": "+time.year()+"-"+time.month()+"-"+time.day()+" "+time.hour()+":"+time.minute()+":"+time.second() +"\","
+	+"\"waarde\": \"" + String(number)+"\"}");
+
+	if(client.connect(restServer,8080))
+	{
+		client.print("POST /iws/data HTTP/1.1");
+        // client.println("GET /api/newdeveloper/lights/4 HTTP/1.1");
+        client.print("Host: ");
+        client.print(String(restServerString+":"+restServerPort));
+        client.print("Connection: keep-alive"); 
+        client.print("Content-Type:   application/json; charset=UTF-8"); 
+        client.print("Content-Length: "); 
+        client.print(jsonBody.length());
+        client.print(""); 
+        client.print(jsonBody);
+        client.print(""); 
+
+        Serial.print("Sent package with body");
+        Serial.print(jsonBody);       
+        Serial.print(" and length ");
+        Serial.println(jsonBody.length());
+
+        while (!client.available())
+        {
+        	delay(1);
+        }
+        while (client.available()) {
+        	char c = client.read();
+        	Serial.print(c);
+        }
+    }
+    else
+    {
+    	Serial.println("Can\'t connect");
+    }
+}
+
+void loop() {
+	char index = 0;
+	while (Serial.available() > 0) 
+	{
+        // read the incoming byte:
+        if(Serial.available() > 0)
+        buffer[index++] = Serial.read();
+    }
+    if(buffer[0]!=0&&index!=0)
+    {
+    	Serial.println("Ontvangen:");
+    	Serial.println(buffer);
+    	// send_pack(buffer); We still have to add something like this
+		int i = 0; while (i<21){buffer[i++]=0;} //clearing the bufffer
+		index = 0;
+	}
+
+	delay(1000);
+}
+\end{lstlisting}
 \end{document}
