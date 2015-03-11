@@ -1,7 +1,6 @@
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 #include <Dns.h>
-#include <time.h>
 #include <SPI.h>
 
 int incomingByte = 0;
